@@ -20,6 +20,13 @@ Python + Playwright (mailplus_automation.py)
 Chrome browser → Synology DSM / MailPlus Server GUI
 ```
 
+## Why this uses GUI automation
+
+- Synology MailPlus / DSM exposes **no public REST API** for block-list or quarantine management; the CLI is effectively a black box over a web UI. There is no serious programmatic API to call.
+- The only viable automation path is driving the Chrome web UI via Playwright (DOM / ExtJS interaction), which is inherently brittle.
+- The project exists to **save internal time**: one-click blocking/releasing from Outlook without a human in the DSM UI.
+- Treat it as an internal-use time-saver, not a production platform integration.
+
 ## Files
 
 | File | Purpose |
@@ -106,6 +113,6 @@ setx MAILPLUS_HOME "C:\path\to\outlook-automation"
 
 ## Notes
 
-- The script saves a `session.json` cookie file after a successful login so subsequent runs skip the login step. Delete it if you have login issues.
+- The script saves a `session.json` cookie file after a successful login so subsequent runs skip the login step. `session.json` is **gitignored** — it contains authenticated session cookies, so never commit it. Delete it if you have login issues.
 - All interactions are DOM/JavaScript based, so the script works in headless mode.
 - If the session expires, a full two-step login (username → Next → password → Enter) happens automatically.
